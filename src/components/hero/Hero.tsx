@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { ArrowLeftRight, CreditCard, QrCode } from "lucide-react";
 import { HeroBackdrop } from "./HeroBackdrop";
 import { WaitlistForm, type WaitlistFormProps } from "./WaitlistForm";
@@ -77,6 +78,16 @@ export function Hero({ onStepOneSubmit, onStepTwoSubmit, count = 2340 }: HeroPro
               {count.toLocaleString("en-US")} businesses already waiting
             </p>
           </div>
+
+          <Image
+            src="/hero-illustration.png"
+            alt="A market trader hands a parcel to a dispatch rider as payment moves from her phone to his."
+            width={1150}
+            height={514}
+            priority
+            sizes="(min-width: 1024px) 440px, 100vw"
+            className="mt-10 w-full max-w-[440px]"
+          />
         </div>
 
         <div className="w-full max-w-[520px] animate-rise [animation-delay:80ms]">
