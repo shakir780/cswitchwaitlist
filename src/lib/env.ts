@@ -35,20 +35,39 @@ export type Env = z.output<typeof schema>;
 
 let cached: Env | undefined;
 
-/** Validated settings. Throws one error listing every problem, so a bad deploy fails loudly. */
+/** Every problem with the current settings, e.g. "SESSION_SECRET must be at least 32 characters". */
+export function envProblems(): string[] {
+  const result = schema.safeParse(process.env);
+  return result.success
+    ? []
+    : result.error.issues.map((issue) => `${issue.path.join(".")} ${issue.message}`);
+}
+
+/**
+ * Validated settings, for admin code that genuinely needs all of them. Throws one error
+ * listing every problem. Public signup code reads only what it needs, so a bad admin
+ * setting can never take the waitlist form down.
+ */
 export function env(): Env {
   if (cached) return cached;
-  const result = schema.safeParse(process.env);
-  if (!result.success) {
-    const problems = result.error.issues.map((issue) => `  - ${issue.path.join(".")} ${issue.message}`);
-    throw new Error(`Invalid environment variables:\n${problems.join("\n")}`);
+  const problems = envProblems();
+  if (problems.length > 0) {
+    throw new Error(`Invalid environment variables:\n${problems.map((p) => `  - ${p}`).join("\n")}`);
   }
-  cached = result.data;
+  cached = schema.parse(process.env);
   return cached;
 }
 
+/** SITE_URL without a trailing slash, or null if it's unset or not a full URL. */
+export function siteUrlSetting() {
+  const value = process.env.SITE_URL?.trim();
+  return value && URL.canParse(value) ? value.replace(/\/$/, "") : null;
+}
+
+/** Resend settings, or null when email is turned off or only half configured. */
 export function emailConfig() {
-  const { RESEND_API_KEY, EMAIL_FROM, EMAIL_REPLY_TO } = env();
-  if (!RESEND_API_KEY || !EMAIL_FROM) return null;
-  return { apiKey: RESEND_API_KEY, from: EMAIL_FROM, replyTo: EMAIL_REPLY_TO };
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const from = process.env.EMAIL_FROM?.trim();
+  if (!apiKey || !from) return null;
+  return { apiKey, from, replyTo: process.env.EMAIL_REPLY_TO?.trim() || undefined };
 }

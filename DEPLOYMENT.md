@@ -7,14 +7,13 @@ the admin page at `/admin/waitlist`, and the confirmation email all deploy toget
 
 1. In the Vercel project, open **Storage → Marketplace → Neon** and create a database.
    Connect it to the project; this sets `DATABASE_URL` for Production, Preview and Development.
-2. Create the tables from your machine, pointing at the new database:
+2. Nothing else: every Vercel deploy runs the database migrations before building
+   (the `vercel-build` script in `package.json`), so the tables are created and kept
+   up to date automatically. To run them by hand against any database:
 
    ```sh
-   DATABASE_URL="<Neon connection string>" npm run db:migrate
+   DATABASE_URL="<connection string>" npm run db:migrate
    ```
-
-   Run this again whenever a new file appears in `drizzle/`. Migrations only add to the
-   schema and are safe to run more than once.
 
 > Use a separate Neon branch for Preview deployments so test signups don't land in the
 > production waitlist. The Neon integration can create one per preview automatically.
@@ -43,8 +42,9 @@ Set these in **Project Settings → Environment Variables** (see `.env.example`)
 | `EMAIL_FROM` | For email | e.g. `CSwitch <hello@cswitch.ng>`, on the verified domain. |
 | `EMAIL_REPLY_TO` | No | Where replies to the confirmation go. |
 
-The server validates these when it starts. If a value is missing or malformed, every request
-returns an error and the Vercel runtime logs list exactly which variables are wrong.
+The server checks these when it starts and logs any problems. Signups only need
+`DATABASE_URL`, so a bad admin setting never takes the form down; it only affects `/admin`.
+`/api/health` shows the same list of problems.
 
 ## 4. Rate limiting (Vercel Firewall)
 
@@ -56,11 +56,13 @@ The waitlist form and admin login are public endpoints. In **Firewall → Rules*
 
 ## 5. After deploying
 
-1. Sign in at `/admin/login` and check `/admin/waitlist` loads.
-2. Sign up with your own email and phone. Check that:
+1. Open `/api/health`. It should say `"ok": true`. If not, it lists the settings that are
+   missing or invalid and the database error, without showing any secret values.
+2. Sign in at `/admin/login` and check `/admin/waitlist` loads.
+3. Sign up with your own email and phone. Check that:
    - the row appears in the admin page as **Completed**, with **Email sent** under it;
    - the email arrives (check spam the first time) and its link opens the site.
-3. If the admin page shows **Email failed**, hover it to see Resend's error. The usual cause
+4. If the admin page shows **Email failed**, hover it to see Resend's error. The usual cause
    is an unverified domain or an `EMAIL_FROM` on a different domain.
 
 ## Local development

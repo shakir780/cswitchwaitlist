@@ -9,7 +9,7 @@ import {
   type WaitlistStepOne,
   type WaitlistSubmission,
 } from "@/lib/validation/waitlist";
-import { env } from "@/lib/env";
+import { siteUrlSetting } from "@/lib/env";
 import { sendConfirmations, willSendConfirmationEmail } from "@/lib/notifications/confirmations";
 import { REFERRAL_COOKIE } from "@/lib/waitlist/referrals";
 import { completeSignup, saveStepOne } from "@/lib/waitlist/signups";
@@ -38,8 +38,8 @@ async function referralCookie() {
 }
 
 async function siteUrl() {
-  const { SITE_URL } = env();
-  if (SITE_URL) return SITE_URL.replace(/\/$/, "");
+  const configured = siteUrlSetting();
+  if (configured) return configured;
   const headerList = await headers();
   const host = headerList.get("x-forwarded-host") ?? headerList.get("host");
   const protocol = headerList.get("x-forwarded-proto") ?? "https";
