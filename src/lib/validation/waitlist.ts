@@ -97,7 +97,7 @@ export const waitlistStepTwoSchema = z.object({
   category: requiredChoice(businessCategories, "Choose a category"),
   state: requiredChoice(nigerianStates, "Choose a state"),
   heardFrom: optionalChoice(referralSources),
-  consent: z.boolean().refine(Boolean, "Please agree to continue"),
+  consent: z.boolean().refine(Boolean, "Tick the box to give your consent"),
 });
 
 export type WaitlistStepTwo = z.output<typeof waitlistStepTwoSchema>;

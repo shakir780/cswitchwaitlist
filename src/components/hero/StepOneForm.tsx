@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -113,13 +114,13 @@ export function StepOneForm({ defaultValues, onSubmit }: StepOneFormProps) {
   );
 }
 
-export function PrivacyLink() {
+export function PrivacyLink({ children = "Privacy Policy" }: { children?: ReactNode }) {
   return (
     <Link
       href="/privacy"
       className="underline-offset-2 hover:text-ink hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-dark"
     >
-      Privacy Policy
+      {children}
     </Link>
   );
 }

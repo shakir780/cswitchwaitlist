@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { COMPANY_NAME } from "@/lib/company";
 
 const footerLinks = [
   { href: "/privacy", label: "Privacy policy" },
@@ -10,7 +11,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-line-strong bg-surface">
       <div className="page-container flex flex-col gap-5 py-8 text-[13px] text-caption md:flex-row md:text-[14px] md:items-center md:justify-between">
-        <p>© 2026 Connexxion Telecom. CSwitch is a product of Connexxion Telecom.</p>
+        <p>© 2026 {COMPANY_NAME}. CSwitch is a product of {COMPANY_NAME}.</p>
         <nav aria-label="Legal">
           <ul className="flex items-center gap-2.5">
             {footerLinks.map((link, index) => (

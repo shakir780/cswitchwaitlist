@@ -21,6 +21,7 @@ import {
   TextButton,
   inputClass,
 } from "./fields";
+import { COMPANY_NAME, PRIVACY_CONTACT_EMAIL } from "@/lib/company";
 import { PrivacyLink } from "./StepOneForm";
 
 type StepTwoFormProps = {
@@ -112,10 +113,20 @@ export function StepTwoForm({ defaultValues, onSubmit, onBack }: StepTwoFormProp
           {...register("consent")}
           error={errors.consent?.message}
           label={
-            <>
-              I agree to the <PrivacyLink /> and to CSwitch contacting me about early access.
-              <span aria-hidden className="text-muted"> *</span>
-            </>
+            <span className="block text-[13px] leading-[1.4] text-muted md:text-[14px]">
+              By submitting this form, I consent to {COMPANY_NAME} collecting and using my
+              information to contact me about its products and services. My information will be
+              handled in accordance with the Nigeria Data Protection Act and {COMPANY_NAME}&rsquo;s{" "}
+              <PrivacyLink>privacy notice</PrivacyLink>. I may withdraw my consent at any time by
+              contacting{" "}
+              <a
+                href={`mailto:${PRIVACY_CONTACT_EMAIL}`}
+                className="underline-offset-2 hover:text-ink hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-dark"
+              >
+                {PRIVACY_CONTACT_EMAIL}
+              </a>
+              .<span aria-hidden className="text-ink"> *</span>
+            </span>
           }
         />
 
