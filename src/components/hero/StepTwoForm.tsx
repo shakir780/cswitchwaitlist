@@ -1,14 +1,9 @@
 "use client";
 
-import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check } from "lucide-react";
 import {
-  branchCounts,
   businessCategories,
-  businessNeeds,
-  monthlySalesRanges,
   nigerianStates,
   referralSources,
   waitlistStepTwoSchema,
@@ -18,14 +13,12 @@ import {
 import {
   Checkbox,
   Field,
-  FieldError,
   FormError,
   Select,
   StepHeading,
   StepProgress,
   SubmitButton,
   TextButton,
-  chipClass,
   inputClass,
 } from "./fields";
 import { PrivacyLink } from "./StepOneForm";
@@ -40,15 +33,11 @@ const emptyValues: WaitlistStepTwoInput = {
   businessName: "",
   category: "",
   state: "",
-  monthlySales: "",
-  needs: [],
-  branches: "",
   heardFrom: "",
   consent: false,
 };
 
 export function StepTwoForm({ defaultValues, onSubmit, onBack }: StepTwoFormProps) {
-  const needsErrorId = useId();
   const {
     register,
     handleSubmit,
@@ -104,48 +93,6 @@ export function StepTwoForm({ defaultValues, onSubmit, onBack }: StepTwoFormProp
               <Select {...a11y} {...register("state")} placeholder="Select a state">
                 {nigerianStates.map((state) => (
                   <option key={state}>{state}</option>
-                ))}
-              </Select>
-            )}
-          </Field>
-          <Field label="Monthly sales" error={errors.monthlySales?.message}>
-            {(a11y) => (
-              <Select {...a11y} {...register("monthlySales")} placeholder="Select a range">
-                {monthlySalesRanges.map((range) => (
-                  <option key={range.value} value={range.value}>
-                    {range.label}
-                  </option>
-                ))}
-              </Select>
-            )}
-          </Field>
-        </div>
-
-        <fieldset aria-describedby={errors.needs ? needsErrorId : undefined}>
-          <legend className="mb-1.5 text-[14px] font-medium text-ink">
-            What do you need?<span aria-hidden className="text-ink"> *</span>
-          </legend>
-          <div className="flex flex-wrap gap-2">
-            {businessNeeds.map((need) => (
-              <label
-                key={need}
-                className={`group cursor-pointer select-none ${chipClass} has-checked:border-brand-dark has-checked:bg-brand-tint-soft has-checked:text-brand-dark has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-dark`}
-              >
-                <input {...register("needs")} type="checkbox" value={need} className="sr-only" />
-                <Check aria-hidden strokeWidth={2.5} className="hidden size-3.5 group-has-checked:block" />
-                {need}
-              </label>
-            ))}
-          </div>
-          <FieldError id={needsErrorId} message={errors.needs?.message} />
-        </fieldset>
-
-        <div className="grid gap-[18px] sm:grid-cols-2 sm:gap-3">
-          <Field label="Branches" optional error={errors.branches?.message}>
-            {(a11y) => (
-              <Select {...a11y} {...register("branches")} placeholder="Select">
-                {branchCounts.map((count) => (
-                  <option key={count}>{count}</option>
                 ))}
               </Select>
             )}

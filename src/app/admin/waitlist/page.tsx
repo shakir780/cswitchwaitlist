@@ -15,7 +15,6 @@ import { requireAdmin } from "@/lib/admin/session";
 import {
   businessCategories,
   formatNigerianPhone,
-  monthlySalesRanges,
   nigerianStates,
 } from "@/lib/validation/waitlist";
 import { logout } from "../actions";
@@ -181,8 +180,6 @@ function Select({
   );
 }
 
-const salesLabels = new Map<string, string>(monthlySalesRanges.map((r) => [r.value, r.label]));
-
 const dateFormat = new Intl.DateTimeFormat("en-GB", {
   dateStyle: "medium",
   timeStyle: "short",
@@ -201,8 +198,6 @@ function SignupsTable({ rows }: { rows: SignupRow[] }) {
               "Phone",
               "Business",
               "State",
-              "Monthly sales",
-              "Needs",
               "Heard from",
               "Referral code",
               "Referrals",
@@ -248,19 +243,8 @@ function SignupsTable({ rows }: { rows: SignupRow[] }) {
               <td className="px-4 py-3">
                 <div className="text-ink">{row.businessName ?? <Empty />}</div>
                 {row.category && <div className="text-muted">{row.category}</div>}
-                {row.branches && (
-                  <div className="text-muted">
-                    {row.branches} {row.branches === "1" ? "branch" : "branches"}
-                  </div>
-                )}
               </td>
               <td className="px-4 py-3 whitespace-nowrap">{row.state ?? <Empty />}</td>
-              <td className="px-4 py-3 whitespace-nowrap">
-                {row.monthlySales ? salesLabels.get(row.monthlySales) : <Empty />}
-              </td>
-              <td className="max-w-[200px] px-4 py-3">
-                {row.needs?.length ? row.needs.join(", ") : <Empty />}
-              </td>
               <td className="px-4 py-3 whitespace-nowrap">{row.heardFrom ?? <Empty />}</td>
               <td className="px-4 py-3 whitespace-nowrap">
                 <code className="text-[13px]">{row.referralCode}</code>

@@ -80,7 +80,7 @@ export function Hero({ onStepOneSubmit, onStepTwoSubmit, count = 2340 }: HeroPro
           </div>
 
           <Image
-            src="/hero-illustration.png"
+            src="/hero-market-delivery.png"
             alt="A market trader hands a parcel to a dispatch rider as payment moves from her phone to his."
             width={1150}
             height={514}

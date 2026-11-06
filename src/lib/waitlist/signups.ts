@@ -41,9 +41,6 @@ export async function completeSignup(data: ValidatedSubmission, referralCookie?:
     businessName: data.businessName,
     category: data.category,
     state: data.state,
-    monthlySales: data.monthlySales,
-    needs: data.needs,
-    branches: data.branches ?? null,
     heardFrom: data.heardFrom ?? null,
   };
 

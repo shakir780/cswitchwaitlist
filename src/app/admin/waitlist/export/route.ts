@@ -1,9 +1,6 @@
 import type { NextRequest } from "next/server";
 import { allSignups, parseFilters } from "@/lib/admin/waitlist";
 import { hasAdminSession } from "@/lib/admin/session";
-import { monthlySalesRanges } from "@/lib/validation/waitlist";
-
-const salesLabels = new Map<string, string>(monthlySalesRanges.map((r) => [r.value, r.label]));
 
 export async function GET(request: NextRequest) {
   if (!(await hasAdminSession())) {
@@ -23,9 +20,6 @@ export async function GET(request: NextRequest) {
     "Business name",
     "Category",
     "State",
-    "Monthly sales",
-    "Needs",
-    "Branches",
     "Heard from",
     "Referral code",
     "Referred by",
@@ -43,9 +37,6 @@ export async function GET(request: NextRequest) {
     row.businessName ?? "",
     row.category ?? "",
     row.state ?? "",
-    row.monthlySales ? (salesLabels.get(row.monthlySales) ?? row.monthlySales) : "",
-    row.needs?.join("; ") ?? "",
-    row.branches ?? "",
     row.heardFrom ?? "",
     row.referralCode,
     row.referredBy ?? "",

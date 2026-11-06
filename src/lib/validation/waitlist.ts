@@ -69,26 +69,6 @@ export const nigerianStates = [
   "Taraba", "Yobe", "Zamfara",
 ] as const;
 
-export const monthlySalesRanges = [
-  { value: "under_1m", label: "Under ₦1m" },
-  { value: "1m_5m", label: "₦1m–₦5m" },
-  { value: "5m_20m", label: "₦5m–₦20m" },
-  { value: "20m_100m", label: "₦20m–₦100m" },
-  { value: "over_100m", label: "Over ₦100m" },
-] as const;
-
-export const businessNeeds = [
-  "Business account",
-  "Payment links",
-  "POS terminal",
-  "Online checkout",
-  "Invoicing",
-  "Bulk payouts",
-  "API access",
-] as const;
-
-export const branchCounts = ["1", "2–5", "6–20", "More than 20"] as const;
-
 export const referralSources = [
   "SMEDAN",
   "Instagram",
@@ -98,11 +78,6 @@ export const referralSources = [
   "Google search",
   "Other",
 ] as const;
-
-const salesValues = monthlySalesRanges.map((range) => range.value) as [
-  (typeof monthlySalesRanges)[number]["value"],
-  ...(typeof monthlySalesRanges)[number]["value"][],
-];
 
 type Options = readonly [string, ...string[]];
 
@@ -121,9 +96,6 @@ export const waitlistStepTwoSchema = z.object({
   businessName: z.string().trim().min(2, "Enter your business name"),
   category: requiredChoice(businessCategories, "Choose a category"),
   state: requiredChoice(nigerianStates, "Choose a state"),
-  monthlySales: requiredChoice(salesValues, "Choose a range"),
-  needs: z.array(z.enum(businessNeeds)).min(1, "Pick at least one"),
-  branches: optionalChoice(branchCounts),
   heardFrom: optionalChoice(referralSources),
   consent: z.boolean().refine(Boolean, "Please agree to continue"),
 });
@@ -135,11 +107,10 @@ export type WaitlistSubmission = WaitlistStepOne & WaitlistStepTwo;
 
 /**
  * Re-checks a full submission on the server. The form sends already-parsed values,
- * so unanswered optional selects arrive as undefined rather than "".
+ * so an unanswered optional select arrives as undefined rather than "".
  */
 export const waitlistSubmissionSchema = waitlistStepOneSchema.extend({
   ...waitlistStepTwoSchema.shape,
-  branches: z.enum(branchCounts).optional(),
   heardFrom: z.enum(referralSources).optional(),
 });
 
